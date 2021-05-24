@@ -1,17 +1,35 @@
 import React, { useState, useEffect } from "react";
 import Post from "./components/Post";
+import axios from "axios";
+
 // jsx
 const App = () => {
   const post = [
     { userId: 1, id: 101, title: "zarqa", body: "hi hi" },
     { userId: 2, id: 102, title: "amman", body: "hello hello" },
   ];
+
+  const getData = () => {
+    axios
+      .get(`https://jsonplaceholder.typicode.com/posts`)
+      .then((response) => {
+        setPosts(response.data);
+      })
+      .catch((err) => {
+        console.log("ERR: ", err);
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
   const [title, setTitle] = useState("");
-  const [id, setId] = useState(0);
-  const [userId, setUserId] = useState(0);
+  const [id, setId] = useState("");
+  const [userId, setUserId] = useState("");
   const [body, setBody] = useState("");
   const [posts, setPosts] = useState(post);
-  let obj = {}
+  let obj = {};
+
   return (
     <>
       <div>
@@ -20,7 +38,6 @@ const App = () => {
         <input
           onChange={(e) => {
             setTitle(e.target.value);
-           
           }}
           placeholder="title"
           type="text"
@@ -28,7 +45,6 @@ const App = () => {
         <input
           onChange={(e) => {
             setBody(e.target.value);
-           
           }}
           placeholder="body"
           type="text"
@@ -36,7 +52,6 @@ const App = () => {
         <input
           onChange={(e) => {
             setUserId(e.target.value);
-
           }}
           placeholder="userId"
           type="text"
@@ -44,20 +59,17 @@ const App = () => {
         <input
           onChange={(e) => {
             setId(e.target.value);
-          
           }}
           placeholder="id"
           type="text"
         />
-        <button onClick={() => {
-           obj.title = title
-           obj.body = body
-            obj.userId = userId
-            obj.id = id
-         post.push(obj)
-         console.log(obj);
-         setPosts(post) 
-        }}>click me</button>
+        <button
+          onClick={() => {
+            setPosts([...posts, { userId, id, title, body }]);
+          }}
+        >
+          click me to add
+        </button>
       </div>
     </>
   );
